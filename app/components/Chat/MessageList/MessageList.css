@@ -1,0 +1,25 @@
+.arsf-message-list {
+  height: 100%;
+}
+
+.arsf-message-list-container {
+  height: calc(100% - 150px);
+  padding: 10px;
+  -webkit-box-flex: 1;
+  flex: 1 1 0;
+  -ms-flex: 1 1 1%;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+.conversation-header {
+  position: absolute;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+}
