@@ -6,7 +6,7 @@ const Div = styled('Message');
 export default class Message extends Component {
   render() {
     const { data, startsSequence, endsSequence, showTimestamp } = this.props;
-    const friendlyTimestamp = moment(data.created_on).format('HH:mm');
+    const friendlyTimestamp = moment(data.createdAt).format('HH:mm');
     if (!data.message) return null;
     let isMine = data.sender !== 'admin';
     return (

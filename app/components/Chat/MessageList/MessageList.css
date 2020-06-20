@@ -20,7 +20,7 @@
 }
 .arsf-message-list .abs-w-c-btm-form {
   position: absolute;
-  bottom: 0;
+  bottom: 8px;
   width: 90%;
 }
 

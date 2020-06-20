@@ -141,9 +141,6 @@ export function* sendGroupAction(params) {
     let {message} = params;
     message = {message};
     try {
-      if (message.message) {
-        console.log(message.message);
-      }
       const mess = JSON.parse(message.message);
       if (typeof mess === 'object') {
         message = mess;
