@@ -1,5 +1,7 @@
 .arsf-message-list {
   height: 100%;
+  padding: 6px;
+  padding-top: 10px;
 }
 
 .arsf-message-list-container {
@@ -16,10 +18,30 @@
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
 }
+.arsf-message-list .abs-w-c-btm-form {
+  position: absolute;
+  bottom: 0;
+  width: 90%;
+}
 
 .conversation-header {
   position: absolute;
   top: 0;
   z-index: 100;
   width: 100%;
+}
+
+
+.arsf-message-list-container::-webkit-scrollbar
+{
+  width: 8px;
+  margin-top: 5px;
+}
+
+.arsf-message-list-container::-webkit-scrollbar-thumb
+{
+  border-radius: 10px;
+  background: linear-gradient(170.05deg, rgba(143, 182, 245, 0.68) 11.89%, rgba(143, 182, 245, 0.68) 99.82%);
+  box-shadow: 0px 16px 20px rgba(53, 146, 243, 0.4);
+  backdrop-filter: blur(18px);
 }

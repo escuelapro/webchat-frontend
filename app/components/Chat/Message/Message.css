@@ -44,7 +44,7 @@
 
 .arsf-message .bubble-container .bubble {
   margin: 1px 0;
-  background: #f4f4f8;
+  background: rgba(255, 255, 255, 0.5);
   padding: 10px 15px;
   border-radius: 20px;
   max-width: 75%;
@@ -52,21 +52,32 @@
   border-bottom-left-radius: 2px;
   border-top-right-radius: 20px;
   border-bottom-right-radius: 20px;
+  min-width: 50px;
+  font-family: RobotoIVCHAT;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 18px;
 }
 
 .arsf-message.mine .bubble-container .bubble {
-  background: #007aff;
+  background: #4284FF;
   color: white;
   border-top-left-radius: 20px;
   border-bottom-left-radius: 20px;
   border-top-right-radius: 2px;
   border-bottom-right-radius: 2px;
+  text-align: right;
 }
 
 .time {
   display: block;
   font-size: 11px;
-
+  color: #9ABDFC;
+  text-align: left;
+}
+.left {
+  float: left;
 }
 .right {
   float: right;
