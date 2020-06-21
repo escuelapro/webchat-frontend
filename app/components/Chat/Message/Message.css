@@ -4,6 +4,7 @@
 }
 .arsf-message .bubble {
   white-space: pre-wrap;
+  word-break: break-word;
 }
 .arsf-message .timestamp {
   display: flex;

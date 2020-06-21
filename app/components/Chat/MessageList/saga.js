@@ -101,7 +101,7 @@ export function* newMessage({text}) {
     message.uid = getUid();
     message.isRec = connected > 0;
     window.__arsfChat.send(JSON.stringify(message));
-
+    window.__arsfShowGreetings = false;
     yield put({type: 'messages_success', data: [message]});
     let data;
 

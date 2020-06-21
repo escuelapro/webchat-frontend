@@ -1,8 +1,8 @@
-import React, { Component, memo } from 'react';
-import { connect } from 'react-redux';
-import { compose } from 'redux';
+import React, {Component, memo} from 'react';
+import {connect} from 'react-redux';
+import {compose} from 'redux';
 import moment from 'moment';
-import { createStructuredSelector } from 'reselect';
+import {createStructuredSelector} from 'reselect';
 import injectSaga from 'utils/injectSaga';
 import injectReducer from 'utils/injectReducer';
 
@@ -21,12 +21,13 @@ import styled from '../styled';
 import saga from './saga';
 import reducer from './reducer';
 import Loader from '../Loader';
-import observe, { emitData } from '../../../utils/observers';
+import observe, {emitData} from '../../../utils/observers';
 
 const Div = styled('MessageList');
 
-const ACTIVE_CHATS = '.conversation-list-item.active';
 window.__arsfChatEmmitter = emitData;
+window.__arsfShowGreetings = true;
+
 
 class MessageList extends Component {
   lastLocation = '';
@@ -69,7 +70,7 @@ class MessageList extends Component {
 
   getMessages = (params = {}) => {
     if (params.data) {
-      this.sendAction({ message: params.data });
+      this.sendAction({message: params.data});
       return;
     }
     if (this.el) {
@@ -98,7 +99,7 @@ class MessageList extends Component {
         let previousMoment = moment(previous.createdAt);
         let previousDuration = moment.duration(
           currentMoment.diff(previousMoment));
-        prevBySameAuthor = previous.author === current.author;
+        prevBySameAuthor = previous.sender === current.sender;
 
         if (prevBySameAuthor && previousDuration.as('hours') < 1) {
           startsSequence = false;
@@ -113,7 +114,7 @@ class MessageList extends Component {
       if (next) {
         let nextMoment = moment(next.createdAt);
         let nextDuration = moment.duration(nextMoment.diff(currentMoment));
-        nextBySameAuthor = next.author === current.author;
+        nextBySameAuthor = next.sender === current.sender;
         if (nextBySameAuthor && nextDuration.as('hours') < 1) {
           endsSequence = false;
         }
@@ -142,18 +143,32 @@ class MessageList extends Component {
           null :
           <Loader/>}</div>
       ) : null}
-      <div className="arsf-message-list-container">{this.renderMessages()}</div>
+      <div className="arsf-message-list-container">
+        {window.__arsfShowGreetings ? (
+          <>
+            <div className="greet-message">
+              <div className="img-wrap">
+                <div className="img"></div>
+              </div>
+              <div className="text">Привет! <br/>
+                Это чат для быстрой связи, чтобы
+                оперативно решить твой вопрос :)
+              </div>
+            </div>
+          </>
+        ) : this.renderMessages()}
+      </div>
       <Compose/>
     </div>
   );
 
-  sendAction = ({ action, message }) => {
-    this.props.sendAction({ action, message });
+  sendAction = ({action, message}) => {
+    this.props.sendAction({action, message});
   };
 
   render() {
     return (
-      <Div style={{ height: '100%' }}>
+      <Div style={{height: '100%'}}>
         {this.renderContent()}
       </Div>
     );
@@ -170,13 +185,13 @@ const mapStateToProps = createStructuredSelector({
 
 function mapDispatchToProps(dispatch) {
   return {
-    getMessages: params => dispatch({ type: 'messages_load', ...params }),
-    sendAction: params => dispatch({ type: 'send_action', ...params }),
+    getMessages: params => dispatch({type: 'messages_load', ...params}),
+    sendAction: params => dispatch({type: 'send_action', ...params}),
   };
 }
 
-const withSaga = injectSaga({ key: 'messages', saga });
-const withReducer = injectReducer({ key: 'messages', reducer });
+const withSaga = injectSaga({key: 'messages', saga});
+const withReducer = injectReducer({key: 'messages', reducer});
 
 const withConnect = connect(
   mapStateToProps,

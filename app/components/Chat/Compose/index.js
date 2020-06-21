@@ -15,13 +15,19 @@ if (!window.__arsfChatEmmitter) {
 }
 let rd = 90;
 let lastScrollHeight = 0;
+let firstHeight = false;
 
 function OnInput() {
+  if (!firstHeight || this.value.length < 28) {
+    firstHeight = true
+    this.style.height = '24' + 'px';
+    return
+  }
   this.style.height = 'auto';
   this.style.height = (this.scrollHeight) + 'px';
   const c = document.querySelector('.abs-w-c-btm-form form.compose')
   if (lastScrollHeight < this.scrollHeight) {
-    rd -= 10;
+    rd -= 20;
     if (rd > 10) {
       c.style.borderRadius = `${rd}px`;
     }
@@ -37,11 +43,11 @@ class Compose extends Component {
   }
 
   componentDidMount() {
-    const tx = document.getElementsByTagName('textarea');
-    for (let i = 0; i < tx.length; i++) {
-      tx[i].setAttribute('style', 'height:' + (tx[i].scrollHeight) + 'px;overflow-y:hidden;');
-      tx[i].addEventListener("input", OnInput, false);
+    const tx = this.rel;
+    if (tx) {
+      tx.addEventListener("input", OnInput, false);
     }
+
     const name = '__arsfChatEmmitter';
     observe(name, {
       [name]: this.send.bind(this),
@@ -59,7 +65,8 @@ class Compose extends Component {
   send = (e) => {
     if (e) {
       let el = e.target;
-      if (el.value) this.props.send(el.value);
+      let v = `${el.value}`.trim();
+      if (v) this.props.send(v);
       el.value = '';
     }
   };
@@ -90,7 +97,7 @@ class Compose extends Component {
               className="btn btn-ghost-success img send-btn"
               onClick={() => this.send({target: this.rel})}
             >
-              <span />
+              <span/>
             </button>
             {this.props.rightItems}
           </div>

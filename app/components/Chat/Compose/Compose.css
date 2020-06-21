@@ -1,5 +1,5 @@
 .compose {
-  padding: 10px;
+  padding: 10px 15px;
   display: flex;
   align-items: center;
   border-top: 1px solid #eeeef1;
@@ -11,6 +11,7 @@
   z-index: 11;
   background-color: #fff;
   border-radius: 90px;
+  margin-block-end: 1em;
 }
 
 @supports (backdrop-filter: blur(20px)) {
@@ -21,23 +22,28 @@
 
 .compose-input {
   flex: 1;
-  height: 40px;
+  height: 20px;
   background: none;
   border-radius: 5px;
-  padding: 10px;
   border: none;
   font-style: normal;
   font-weight: normal;
   font-size: 16px;
   line-height: 150%;
-  min-height: 40px;
+  min-height: 20px;
+  overflow-y: hidden;
 }
+
 .compose-input:focus {
   outline: none;
 }
 
 .compose-input::placeholder {
   color: #9ABDFC;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 150%;
 }
 
 .compose .toolbar-button {
@@ -51,6 +57,7 @@
 
 .send {
   padding-left: 10px;
+  line-height: normal;
 }
 
 .send-btn {
@@ -73,5 +80,6 @@
 }
 
 .txtareafirst {
-  height:94px;overflow-y:hidden;
+  height: 94px;
+  overflow-y: hidden;
 }

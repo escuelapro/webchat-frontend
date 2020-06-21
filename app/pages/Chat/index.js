@@ -33,7 +33,7 @@ export function HomePage({ params }) {
             <div className="chat-wrapper1">
               <Chat params={params}/>
               <button className="__mx-phone-line-btn close-btn" onClick={() => setShow(false)}>
-                <span>x</span>
+                <span></span>
               </button>
             </div>
           ) : (
