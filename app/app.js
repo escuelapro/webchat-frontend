@@ -9,22 +9,18 @@ import './assets/style.css'
 const initialState = {};
 const store = configureStore(initialState, history);
 
-let adminMaximumAppInit = config => {
+let adminMaximumAppInit = selector => {
   ReactDOM.render(
     <Provider store={store}>
       <Chat/>
     </Provider>,
-    config.elem || config.selector,
+    selector,
   );
 };
-if (window.onAppMounted && !process.env.VERSION) {
-  window.onAppMounted(adminMaximumAppInit);
-} else {
-  let MOUNT_NODE = document.getElementById('apppopupmax');
-  if (!MOUNT_NODE) {
-    MOUNT_NODE = document.getElementById('apppopupmax122');
-  }
-  if (MOUNT_NODE) {
-    adminMaximumAppInit({selector: MOUNT_NODE});
-  }
+let MOUNT_NODE = document.getElementById('apppopupmax');
+if (!MOUNT_NODE) {
+  MOUNT_NODE = document.getElementById('apppopupmax122');
+}
+if (MOUNT_NODE) {
+  adminMaximumAppInit(MOUNT_NODE);
 }

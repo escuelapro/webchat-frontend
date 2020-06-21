@@ -1,10 +1,6 @@
 import {put, takeLatest} from 'redux-saga/effects';
-import {parseQuery} from 'utils/request';
 import Storage from 'utils/storage';
-import {
-  MESS_LIMIT,
-  logger,
-} from '../network';
+import { logger } from '../network';
 
 let lastMessageId = '';
 let scrollEnd = false;
@@ -17,13 +13,8 @@ export function* getData(params) {
       connect();
       connected += 1;
     }
-    let offset = 0;
     const {isScroll, isNewMessage} = params;
-    const pq = parseQuery();
-    let {userId = 1, actions} = pq;
-    if (window.location.href.match(/client\/([0-9]+)\//)) {
-      userId = window.location.href.match(/client\/([0-9]+)\//)[1];
-    }
+    let userId = 1;
     const isNew = userId !== lastLocation;
     if (isNew) {
       lastOffset = 0;
@@ -31,30 +22,16 @@ export function* getData(params) {
     if (isNew) {
       scrollEnd = false;
     }
-    if (lastOffset > 0) {
-      offset = lastOffset;
-    }
     if (isNewMessage) {
-      offset = 0;
       lastOffset = 0;
-    }
-    if (isScroll) {
-      offset += MESS_LIMIT;
     }
     if (scrollEnd) {
       return;
     }
     lastLocation = userId;
 
-    if (isScroll || actions) {
+    if (isScroll) {
       return;
-    }
-
-    if (userId) {
-      const params = [`page_size=${MESS_LIMIT}`];
-      if (offset) {
-        params.push(`page=${offset}`);
-      }
     }
   } catch (error) {
     logger(error);
@@ -66,7 +43,7 @@ let connected = 0;
 const connect = (rec = false) => {
   let wss = 'wss';
   if (process.env.NODE_ENV === 'development') wss = 'ws';
-  var cc = new WebSocket(`${wss}://${window.__arsfChatUrl || process.env.WS_URI}/`);
+  let cc = new WebSocket(`${wss}://${window.__arsfChatUrl || process.env.WS_URI}/`);
   window.__arsfChat = cc;
   if (!window.__arsfChatIdg) window.__arsfChatIdg = 2;
 

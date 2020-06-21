@@ -6,7 +6,6 @@
   bottom: 0;
   border-left: 1px solid #ddd;
   position: relative;
-  -ms-flex-negative: 0;
   flex-shrink: 0;
   box-shadow: 0 -3px 10px 0 rgba(0, 0, 0, 0.05);
   z-index: 11;
@@ -22,16 +21,23 @@
 
 .compose-input {
   flex: 1;
-  font-size: 14px;
   height: 40px;
   background: none;
   border-radius: 5px;
   padding: 10px;
   border: none;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 150%;
+  min-height: 40px;
+}
+.compose-input:focus {
+  outline: none;
 }
 
 .compose-input::placeholder {
-  opacity: 0.3;
+  color: #9ABDFC;
 }
 
 .compose .toolbar-button {

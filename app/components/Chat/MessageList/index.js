@@ -5,7 +5,6 @@ import moment from 'moment';
 import { createStructuredSelector } from 'reselect';
 import injectSaga from 'utils/injectSaga';
 import injectReducer from 'utils/injectReducer';
-import { parseQuery } from 'utils/request';
 
 import Compose from '../Compose';
 import Message from '../Message';
@@ -50,10 +49,7 @@ class MessageList extends Component {
 
   componentDidUpdate() {
     const props = this.props;
-    const { avitoChatId, actions } = parseQuery();
-    if (!actions) {
-      this.scrollBottom();
-    }
+    this.scrollBottom();
     if (props.location.state) {
       this.conv = props.location.state.data;
     }
@@ -62,14 +58,6 @@ class MessageList extends Component {
     }
 
     this.lastLocation = window.location.search;
-
-    if (avitoChatId) {
-      let sel = `#chat${avitoChatId.replace(/-/g, '_')}`;
-      const chatEl = document.querySelector(sel);
-      const chatEls = document.querySelectorAll(ACTIVE_CHATS);
-      chatEls.forEach(i => i.classList.remove('active'));
-      if (chatEl) chatEl.classList.add('active');
-    }
   }
 
   scrollBottom = () => {
@@ -98,7 +86,7 @@ class MessageList extends Component {
       const previous = mess.messages[i - 1];
       const current = mess.messages[i];
       const next = mess.messages[i + 1];
-      const currentMoment = moment(current.created_on);
+      const currentMoment = moment(current.createdAt);
       let prevBySameAuthor = false;
       let nextBySameAuthor = false;
       let startsSequence = true;
@@ -107,7 +95,7 @@ class MessageList extends Component {
       let showMore = true;
 
       if (previous) {
-        let previousMoment = moment(previous.created_on);
+        let previousMoment = moment(previous.createdAt);
         let previousDuration = moment.duration(
           currentMoment.diff(previousMoment));
         prevBySameAuthor = previous.author === current.author;
@@ -123,10 +111,9 @@ class MessageList extends Component {
       }
 
       if (next) {
-        let nextMoment = moment(next.created_on);
+        let nextMoment = moment(next.createdAt);
         let nextDuration = moment.duration(nextMoment.diff(currentMoment));
         nextBySameAuthor = next.author === current.author;
-
         if (nextBySameAuthor && nextDuration.as('hours') < 1) {
           endsSequence = false;
         }

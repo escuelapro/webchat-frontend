@@ -2,13 +2,15 @@
   height: 100%;
   padding: 6px;
   padding-top: 10px;
+  display: flex;
+  flex-direction: column;
+  align-content: stretch;
 }
 
 .arsf-message-list-container {
   height: calc(100% - 150px);
   padding: 10px;
   -webkit-box-flex: 1;
-  flex: 1 1 0;
   -ms-flex: 1 1 1%;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
@@ -17,11 +19,10 @@
   overflow-y: scroll;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
+  flex-grow:1;
 }
 .arsf-message-list .abs-w-c-btm-form {
-  position: absolute;
-  bottom: 8px;
-  width: 90%;
+  bottom: 15px;
 }
 
 .conversation-header {
@@ -42,6 +43,6 @@
 {
   border-radius: 10px;
   background: linear-gradient(170.05deg, rgba(143, 182, 245, 0.68) 11.89%, rgba(143, 182, 245, 0.68) 99.82%);
-  box-shadow: 0px 16px 20px rgba(53, 146, 243, 0.4);
+  box-shadow: 0 16px 20px rgba(53, 146, 243, 0.4);
   backdrop-filter: blur(18px);
 }

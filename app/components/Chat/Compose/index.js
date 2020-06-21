@@ -75,9 +75,8 @@ class Compose extends Component {
         <form onSubmit={this.test} className="compose">
           <textarea
             ref={el => this.rel = el}
-            type="text"
             className="compose-input form-control"
-            placeholder="Start typing..."
+            placeholder="Задайте свой вопрос"
             onKeyDown={(e) => {
               if (e.key === 'Enter' || e.keyCode === 13) {
                 if (!e.ctrlKey && !e.shiftKey) {
@@ -91,7 +90,7 @@ class Compose extends Component {
               className="btn btn-ghost-success img send-btn"
               onClick={() => this.send({target: this.rel})}
             >
-              <span></span>
+              <span />
             </button>
             {this.props.rightItems}
           </div>
