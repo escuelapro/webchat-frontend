@@ -7,10 +7,6 @@
   border-left: 1px solid #ddd;
   position: relative;
   flex-shrink: 0;
-  box-shadow: 0 -3px 10px 0 rgba(0, 0, 0, 0.05);
-  z-index: 11;
-  background-color: #fff;
-  border-radius: 90px;
   margin-block-end: 1em;
 }
 
@@ -30,8 +26,15 @@
   font-weight: normal;
   font-size: 16px;
   line-height: 150%;
-  min-height: 20px;
+  min-height: 50px;
   overflow-y: hidden;
+  max-height: 200px;
+  box-shadow: 0 -3px 10px 0 rgba(0, 0, 0, 0.05);
+  z-index: 11;
+  background-color: #fff;
+  border-radius: 30px;
+  padding: 14px 17px;
+  padding-right: 63px;
 }
 
 .compose-input:focus {
@@ -58,6 +61,9 @@
 .send {
   padding-left: 10px;
   line-height: normal;
+  position: absolute;
+  z-index: 23;
+  right: 22px;
 }
 
 .send-btn {

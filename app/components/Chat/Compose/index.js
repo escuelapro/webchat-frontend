@@ -18,14 +18,14 @@ let lastScrollHeight = 0;
 let firstHeight = false;
 
 function OnInput() {
-  if (!firstHeight || this.value.length < 28) {
+  if (!firstHeight || this.value.length < 26 && !this.value.match('\n')) {
     firstHeight = true
     this.style.height = '24' + 'px';
     return
   }
   this.style.height = 'auto';
   this.style.height = (this.scrollHeight) + 'px';
-  const c = document.querySelector('.abs-w-c-btm-form form.compose')
+  const c = document.querySelector('.abs-w-c-btm-form form.compose textarea')
   if (lastScrollHeight < this.scrollHeight) {
     rd -= 20;
     if (rd > 10) {
