@@ -8,54 +8,86 @@ let lastLocation = '';
 let lastOffset = 0;
 let connected = 0;
 let _rec = false;
+let reconnect = true;
+let getlastMessagesNewUid = false;
 
-export function* clear(params) {
+export function* clear() {
+  let userId = getUid();
+  const isNew = userId !== lastLocation;
+  if (!lastLocation || !isNew) {
+    return;
+  }
   lastMessageId = '';
   scrollEnd = false;
   lastLocation = '';
   lastOffset = 0;
   connected = 0;
   _rec = true;
+  getlastMessagesNewUid = true;
 }
 
 export function* getData(params) {
   try {
     //console.log('connected', connected);
     if (!connected) {
-      connect(_rec);
+      connect(_rec, params);
       connected += 1;
+    } else {
+      if (window.__arsfChat) {
+        if (!isOpen(window.__arsfChat)) {
+          reconnect = true;
+          connect(_rec, params);
+        } else {
+          if (params.mount) {
+            const message = {service: 'lastmes'};
+            if (window.__arsfChatIdg) {
+              message.g = window.__arsfChatIdg;
+            }
+            message.uid = getUid();
+            window.__arsfChat.send(JSON.stringify(message));
+          }
+        }
+      }
     }
-    const {isScroll, isNewMessage} = params;
-    let userId = 1;
+    const {isNewMessage} = params;
+    let userId = getUid();
     const isNew = userId !== lastLocation;
-    if (isNew) {
+    if (lastLocation && isNew) {
+      yield put({type: 'messages_clear'});
       lastOffset = 0;
     }
+    lastLocation = userId;
     if (isNew) {
       scrollEnd = false;
     }
     if (isNewMessage) {
       lastOffset = 0;
     }
-    if (scrollEnd) {
-      return;
-    }
-    lastLocation = userId;
   } catch (error) {
     logger(error);
     yield put({type: 'messages_error', error});
   }
 }
 
-const connect = (rec = false) => {
+function isOpen(ws) { return ws.readyState === ws.OPEN; }
+
+const connect = (rec = false, params = {}) => {
   let wss = 'wss';
   if (process.env.NODE_ENV === 'development') wss = 'ws';
-  let cc = new WebSocket(`${wss}://${window.__arsfChatUrl || process.env.WS_URI}/`);
+  let wsUri = window.__arsfChatUrl || process.env.WS_URI;
+  let cc = new WebSocket(`${wss}://${wsUri}/`);
   window.__arsfChat = cc;
-  if (!window.__arsfChatIdg) window.__arsfChatIdg = 2;
-
+  if (!window.__arsfChatIdg) window.__arsfChatIdg = 1;
   cc.onopen = () => {
     _rec = false;
+    if (params.mount) {
+      const message = {service: 'lastmes'};
+      if (window.__arsfChatIdg) {
+        message.g = window.__arsfChatIdg;
+      }
+      message.uid = getUid();
+      window.__arsfChat.send(JSON.stringify(message));
+    }
     if (!rec) {
       console.log(`room ${window.__arsfChatIdg}`);
       let message = {message: 'hi', login: 1};
@@ -71,11 +103,17 @@ const connect = (rec = false) => {
       window.__arsfChat.send(JSON.stringify(message));
     }
   };
-  if (window.__arsfChat) window.__arsfChat.addEventListener('message', (event) => {
-    if (window.__arsfChatEmmitter) window.__arsfChatEmmitter('__arsfChatEmmittermess', event);
-  });
-  cc.onclose = function (e) {
-    setTimeout(function () {
+  if (window.__arsfChat) window.__arsfChat.addEventListener('message',
+    (event) => {
+      if (window.__arsfChatEmmitter) window.__arsfChatEmmitter(
+        '__arsfChatEmmittermess', event);
+    });
+  cc.onerror = function(e) {
+    reconnect = false;
+  };
+  cc.onclose = function(e) {
+    if (!reconnect) return;
+    setTimeout(function() {
       connect(true);
       connected += 1;
     }, 1000);
@@ -139,9 +177,12 @@ export function* sendGroupAction(params) {
           window.instantChatBotUidName = message.message;
           Storage.set('instantChatBotUidNameStored', message.message);
         }
-        if (message.lastMess && message.lastMess.length) {
-          yield put({type: 'messages_success', data: message.lastMess});
-        }
+        let {lastMess = []} = message;
+        yield put({type: 'messages_success', data: lastMess});
+      }
+      if (message.service === 'lastmes') {
+        let {lastMess = []} = message;
+        yield put({type: 'messages_success', data: lastMess});
       }
     } else {
       if (connected > 1 && message.greeting) {

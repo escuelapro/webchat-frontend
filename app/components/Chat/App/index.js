@@ -1,13 +1,12 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Messenger from '../Messenger';
 
-export default class App extends Component {
-  render() {
-    const { params } = this.props;
-    return (
-      <div style={{ height: '100%' }}>
-        <Messenger userIds={params} />
-      </div>
-    );
-  }
-}
+const App = (props) => {
+  const {params} = props;
+  return (
+    <div style={{height: '100%'}}>
+      <Messenger userIds={params}/>
+    </div>
+  );
+};
+export default App;

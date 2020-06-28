@@ -26,7 +26,7 @@ const Div = styled('MessageList');
 
 window.__arsfChatEmmitter = emitData;
 window.__arsfShowGreetings = true;
-
+const MSG_CONTAINER = '.arsf-messenger-scrollable .arsf-message-list-container';
 
 class MessageList extends Component {
   lastLocation = '';
@@ -36,13 +36,12 @@ class MessageList extends Component {
     observe(name, {
       [name]: this.getMessages.bind(this),
     });
-    this.getMessages();
+    this.getMessages({mount: 1});
     this.scrollBottom();
   }
 
   componentWillUnmount() {
-    if (window.__arsfChat) window.__arsfChat.close()
-    this.props.clear()
+    this.props.clear();
   }
 
   componentDidUpdate() {
@@ -51,10 +50,12 @@ class MessageList extends Component {
   }
 
   scrollBottom = () => {
-    setTimeout(() => {
-      const element = document.querySelector('.arsf-messenger-scrollable .arsf-message-list-container');
-      element.scrollTop = element.scrollHeight;
-    }, 100);
+    const element = document.querySelector(MSG_CONTAINER);
+    if (element) {
+      setTimeout(() => {
+        element.scrollTop = element.scrollHeight;
+      }, 100);
+    }
   };
 
   getMessages = (params = {}) => {
@@ -137,7 +138,7 @@ class MessageList extends Component {
           <>
             <div className="greet-message">
               <div className="img-wrap">
-                <div className="img"></div>
+                <div className="img"/>
               </div>
               <div className="text">Привет! <br/>
                 Это чат для быстрой связи, чтобы
@@ -156,6 +157,10 @@ class MessageList extends Component {
   };
 
   render() {
+    window.__arsfShowGreetings = this.props.messages.messages.length === 0;
+    if (this.props.loading) {
+      return <Loader/>;
+    }
     return (
       <Div style={{height: '100%'}}>
         {this.renderContent()}
