@@ -1,20 +1,24 @@
-import React, { memo, useEffect, useState } from 'react';
-import { compose } from 'redux';
+import React, {memo, useEffect, useState} from 'react';
+import {compose} from 'redux';
 import Chat from 'components/Chat/App';
 import styled from './styled';
-import observe, { emitData } from '../../utils/observers';
+import observe, {emitData} from '../../utils/observers';
 
 const Popup = styled('Page');
 window.instantChatBot = {
+  show: false,
   open: () => {
-    emitData('instantChatBotEvents', { open: true });
+    window.instantChatBot.show = !window.instantChatBot.show
+    emitData('instantChatBotEvents', {open: window.instantChatBot.show});
   },
-  close: () => {
-    emitData('instantChatBotEvents', { open: false });
+  close: (exit) => {
+    if (exit && window.instantChatBotUidName) delete window.instantChatBotUidName
+    window.instantChatBot.show = false;
+    emitData('instantChatBotEvents', {open: false});
   },
 };
 
-export function HomePage({ params }) {
+export function HomePage({params}) {
   const [show, setShow] = useState(false);
   const setShowFunc = (data) => {
     setShow(data.open);
@@ -32,8 +36,8 @@ export function HomePage({ params }) {
           {show ? (
             <div className="chat-wrapper1">
               <Chat params={params}/>
-              <button className="__mx-phone-line-btn close-btn" onClick={() => setShow(false)}>
-                <span></span>
+              <button className="__mx-phone-line-btn close-btn" onClick={() => window.instantChatBot.open()}>
+                <span />
               </button>
             </div>
           ) : (

@@ -1,4 +1,3 @@
-import { LOCATION_CHANGE } from 'react-router-redux';
 import produce from 'immer';
 
 export const initialState = {
@@ -12,9 +11,14 @@ export const initialState = {
 const appReducer = (state = initialState, action) =>
   produce(state, draft => {
     switch (action.type) {
+      case 'messages_clear':
+        draft.loading = false;
+        draft.error = false;
+        draft.action = false;
+        draft.messages = {messages: []};
+        break;
       case 'messages_load':
       case 'messages_test':
-      case LOCATION_CHANGE:
         draft.loading = true;
         draft.error = false;
         draft.action = false;

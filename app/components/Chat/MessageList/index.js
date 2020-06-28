@@ -13,7 +13,6 @@ import {
   makeSelectError,
   makeSelectLoading,
   makeSelectMess,
-  makeSelectLocation,
   makeSelectAction,
 } from './selectors';
 
@@ -32,13 +31,6 @@ window.__arsfShowGreetings = true;
 class MessageList extends Component {
   lastLocation = '';
 
-  constructor(props) {
-    super(props);
-    if (props.location.state) {
-      this.conv = props.location.state.data;
-    }
-  }
-
   componentDidMount() {
     const name = '__arsfChatEmmittermess';
     observe(name, {
@@ -48,16 +40,13 @@ class MessageList extends Component {
     this.scrollBottom();
   }
 
-  componentDidUpdate() {
-    const props = this.props;
-    this.scrollBottom();
-    if (props.location.state) {
-      this.conv = props.location.state.data;
-    }
-    if (props.action && props.action.conv) {
-      this.conv = props.action.conv;
-    }
+  componentWillUnmount() {
+    if (window.__arsfChat) window.__arsfChat.close()
+    this.props.clear()
+  }
 
+  componentDidUpdate() {
+    this.scrollBottom();
     this.lastLocation = window.location.search;
   }
 
@@ -180,11 +169,11 @@ const mapStateToProps = createStructuredSelector({
   action: makeSelectAction(),
   loading: makeSelectLoading(),
   error: makeSelectError(),
-  location: makeSelectLocation(),
 });
 
 function mapDispatchToProps(dispatch) {
   return {
+    clear: params => dispatch({type: 'messages_clear', ...params}),
     getMessages: params => dispatch({type: 'messages_load', ...params}),
     sendAction: params => dispatch({type: 'send_action', ...params}),
   };

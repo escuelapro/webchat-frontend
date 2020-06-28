@@ -1,16 +1,28 @@
 import {put, takeLatest} from 'redux-saga/effects';
 import Storage from 'utils/storage';
-import { logger } from '../network';
+import {logger} from '../network';
 
 let lastMessageId = '';
 let scrollEnd = false;
 let lastLocation = '';
 let lastOffset = 0;
+let connected = 0;
+let _rec = false;
+
+export function* clear(params) {
+  lastMessageId = '';
+  scrollEnd = false;
+  lastLocation = '';
+  lastOffset = 0;
+  connected = 0;
+  _rec = true;
+}
 
 export function* getData(params) {
   try {
+    //console.log('connected', connected);
     if (!connected) {
-      connect();
+      connect(_rec);
       connected += 1;
     }
     const {isScroll, isNewMessage} = params;
@@ -29,17 +41,12 @@ export function* getData(params) {
       return;
     }
     lastLocation = userId;
-
-    if (isScroll) {
-      return;
-    }
   } catch (error) {
     logger(error);
     yield put({type: 'messages_error', error});
   }
 }
 
-let connected = 0;
 const connect = (rec = false) => {
   let wss = 'wss';
   if (process.env.NODE_ENV === 'development') wss = 'ws';
@@ -48,8 +55,8 @@ const connect = (rec = false) => {
   if (!window.__arsfChatIdg) window.__arsfChatIdg = 2;
 
   cc.onopen = () => {
+    _rec = false;
     if (!rec) {
-
       console.log(`room ${window.__arsfChatIdg}`);
       let message = {message: 'hi', login: 1};
       message.host = window.location.host;
@@ -148,10 +155,8 @@ export function* sendGroupAction(params) {
   }
 }
 
-/**
- * Root saga manages watcher lifecycle
- */
 export default function* saga() {
+  yield takeLatest('messages_clear', clear);
   yield takeLatest('messages_load', getData);
   yield takeLatest('send_action', sendGroupAction);
   yield takeLatest('scroll_mess', getData);

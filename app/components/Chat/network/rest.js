@@ -2,7 +2,6 @@ import Storage from 'utils/storage';
 import request from 'utils/request';
 
 const restApi = 'test';
-Storage.set('ctoken', 'test');
 const API = process.env.REST_API || restApi;
 
 let API_URL = '';

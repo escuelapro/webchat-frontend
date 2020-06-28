@@ -1,6 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
-
+let jsonpFunction = 'maxJsonpForm3';
 module.exports = options => ({
   mode: options.mode,
   entry: options.entry,
@@ -9,6 +9,7 @@ module.exports = options => ({
       // Compile into js/build.js
       path: path.resolve(process.cwd(), 'build'),
       publicPath: '/',
+      jsonpFunction,
     },
     options.output,
   ),

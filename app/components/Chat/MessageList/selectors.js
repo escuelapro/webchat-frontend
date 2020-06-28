@@ -21,11 +21,6 @@ const makeSelectError = () =>
     globalState => globalState.error,
   );
 
-const makeSelectLocation = () =>
-  createSelector(
-    selectRouter,
-    routerState => routerState.location,
-  );
 const makeSelectMess = () =>
   createSelector(
     selectGlobal,
@@ -40,7 +35,6 @@ export {
   selectGlobal,
   makeSelectLoading,
   makeSelectError,
-  makeSelectLocation,
   makeSelectMess,
   makeSelectAction,
 };
