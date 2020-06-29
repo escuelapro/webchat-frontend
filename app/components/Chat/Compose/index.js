@@ -18,20 +18,22 @@ let lastScrollHeight = 0;
 let firstHeight = false;
 
 function OnInput() {
-  if (!firstHeight || this.value.length < 26 && !this.value.match('\n')) {
-    firstHeight = true
+  if ((this.value.trim().length === 0) || !firstHeight || this.value.length <
+    26 && !this.value.match('\n')) {
+    firstHeight = true;
+    if(this.value.trim().length === 0) this.value = this.value.replace(/\n+/,'')
     this.style.height = '24' + 'px';
-    return
+    return;
   }
   this.style.height = 'auto';
   this.style.height = (this.scrollHeight) + 'px';
-  const c = document.querySelector('.abs-w-c-btm-form form.compose textarea')
+  const c = document.querySelector('.abs-w-c-btm-form form.compose textarea');
   if (lastScrollHeight < this.scrollHeight) {
     rd -= 20;
     if (rd > 10) {
       c.style.borderRadius = `${rd}px`;
     }
-    lastScrollHeight = this.scrollHeight
+    lastScrollHeight = this.scrollHeight;
   }
 }
 
@@ -45,7 +47,7 @@ class Compose extends Component {
   componentDidMount() {
     const tx = this.rel;
     if (tx) {
-      tx.addEventListener("input", OnInput, false);
+      tx.addEventListener('input', OnInput, false);
     }
 
     const name = '__arsfChatEmmitter';
@@ -66,7 +68,9 @@ class Compose extends Component {
     if (e) {
       let el = e.target;
       let v = `${el.value}`.trim();
-      if (v) this.props.send(v);
+      if (v) {
+        this.props.send(v);
+      }
       el.value = '';
     }
   };
