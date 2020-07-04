@@ -2,17 +2,18 @@ import React, {memo, useEffect, useState} from 'react';
 import {compose} from 'redux';
 import Chat from 'components/Chat/App';
 import styled from './styled';
-import observe, {emitData} from '../../utils/observers';
+import observe, {emitData} from 'utils/observers';
 
 const Popup = styled('Page');
 window.instantChatBot = {
   show: false,
   open: () => {
-    window.instantChatBot.show = !window.instantChatBot.show
+    window.instantChatBot.show = !window.instantChatBot.show;
     emitData('instantChatBotEvents', {open: window.instantChatBot.show});
   },
   close: (exit) => {
-    if (exit && window.instantChatBotUidName) delete window.instantChatBotUidName
+    if (exit &&
+      window.instantChatBotUidName) delete window.instantChatBotUidName;
     window.instantChatBot.show = false;
     emitData('instantChatBotEvents', {open: false});
   },
@@ -29,6 +30,9 @@ export function HomePage({params}) {
       [name]: setShowFunc,
     });
   }, []);
+  const toggle = () => {
+    window.instantChatBot.open();
+  };
   return (
     <div>
       <Popup>
@@ -36,17 +40,18 @@ export function HomePage({params}) {
           {show ? (
             <div className="chat-wrapper1">
               <Chat params={params}/>
-              <button className="__mx-phone-line-btn close-btn" onClick={() => window.instantChatBot.open()}>
-                <span />
+              <button className="__mx-phone-line-btn close-btn"
+                      onClick={toggle}>
+                <span/>
               </button>
             </div>
           ) : (
-            <div className="msger-button" onClick={setShow} title="Support service"/>
+            <div className="msger-button" onClick={toggle}
+                 title="Support service"/>
           )}
         </div>
       </Popup>
     </div>
   );
 }
-
 export default compose(memo)(HomePage);

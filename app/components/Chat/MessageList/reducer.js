@@ -5,7 +5,7 @@ export const initialState = {
   error: false,
   total: 0,
   action: false,
-  messages: { messages: [] },
+  messages: {messages: []},
 };
 
 const appReducer = (state = initialState, action) =>
@@ -27,29 +27,29 @@ const appReducer = (state = initialState, action) =>
         draft.loading = true;
         draft.error = false;
         break;
-
       case 'messages_success':
-        let m = action.data || [];
-        m.reverse();
-        if (!action.isNewMessage) {
-          if (!action.isNew) {
-            m = state.messages.messages.concat(m);
+          let m = action.data || [];
+          m.reverse();
+          if (!action.isNewMessage) {
+            if (!action.isNew) {
+              m = state.messages.messages.concat(m);
+            }
+          } else {
+            setTimeout(() => {
+              const element = document.querySelector(
+                '.arsf-messenger-scrollable.content');
+              element.scrollTop = element.scrollHeight;
+            }, 100);
           }
-        } else {
-          setTimeout(() => {
-            const element = document.querySelector('.arsf-messenger-scrollable.content');
-            element.scrollTop = element.scrollHeight;
-          }, 100);
-        }
-        m = { messages: m, total: action.total };
-        draft.messages = m;
-        draft.loading = false;
+          m = {messages: m, total: action.total};
+          draft.messages = m;
+          draft.loading = false;
         break;
       case 'message_success':
         let msg = action.data;
         if (!Array.isArray(msg)) msg = [msg];
         const messages = state.messages.messages.concat(msg);
-        draft.messages = { messages };
+        draft.messages = {messages};
         draft.loading = false;
         break;
       case 'messages_error':

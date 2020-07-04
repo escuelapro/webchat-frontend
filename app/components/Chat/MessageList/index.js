@@ -133,6 +133,7 @@ class MessageList extends Component {
           null :
           <Loader/>}</div>
       ) : null}
+
       <div className="arsf-message-list-container">
         {window.__arsfShowGreetings ? (
           <>
