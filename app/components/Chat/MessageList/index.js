@@ -1,7 +1,7 @@
 import React, {Component, memo} from 'react';
 import {connect} from 'react-redux';
 import {compose} from 'redux';
-import moment from 'moment';
+import moment from 'dayjs';
 import {createStructuredSelector} from 'reselect';
 import injectSaga from 'utils/injectSaga';
 import injectReducer from 'utils/injectReducer';
@@ -24,12 +24,16 @@ import observe, {emitData} from '../../../utils/observers';
 
 const Div = styled('MessageList');
 
+// eslint-disable-next-line no-underscore-dangle
 window.__arsfChatEmmitter = emitData;
+// eslint-disable-next-line no-underscore-dangle
 window.__arsfShowGreetings = true;
 const MSG_CONTAINER = '.arsf-messenger-scrollable .arsf-message-list-container';
 
 class MessageList extends Component {
   lastLocation = '';
+
+  this$el = React.createRef();
 
   componentDidMount() {
     const name = '__arsfChatEmmittermess';
@@ -63,7 +67,7 @@ class MessageList extends Component {
       this.sendAction({message: params.data});
       return;
     }
-    if (this.el) {
+    if (this.this$el && this.this$el.current) {
       this.props.getMessages(params);
     }
   };
@@ -86,9 +90,10 @@ class MessageList extends Component {
       let showMore = true;
 
       if (previous) {
-        let previousMoment = moment(previous.createdAt);
-        let previousDuration = moment.duration(
-          currentMoment.diff(previousMoment));
+        const previousMoment = moment(previous.createdAt);
+        const previousDuration = moment.duration(
+          currentMoment.diff(previousMoment),
+        );
         prevBySameAuthor = previous.sender === current.sender;
 
         if (prevBySameAuthor && previousDuration.as('hours') < 1) {
@@ -102,8 +107,8 @@ class MessageList extends Component {
       }
 
       if (next) {
-        let nextMoment = moment(next.createdAt);
-        let nextDuration = moment.duration(nextMoment.diff(currentMoment));
+        const nextMoment = moment(next.createdAt);
+        const nextDuration = moment.duration(nextMoment.diff(currentMoment));
         nextBySameAuthor = next.sender === current.sender;
         if (nextBySameAuthor && nextDuration.as('hours') < 1) {
           endsSequence = false;
@@ -127,29 +132,31 @@ class MessageList extends Component {
   }
 
   renderContent = () => (
-    <div className="arsf-message-list" ref={el => (this.el = el)}>
+    <div className="arsf-message-list" ref={this.this$el}>
       {this.props.messages.messages.length < this.props.messages.total ? (
-        <div>{!this.props.loading ?
-          null :
-          <Loader/>}</div>
+        <div>{!this.props.loading ? null : <Loader />}</div>
       ) : null}
 
       <div className="arsf-message-list-container">
+        {/* eslint-disable-next-line no-underscore-dangle */}
         {window.__arsfShowGreetings ? (
           <>
             <div className="greet-message">
               <div className="img-wrap">
-                <div className="img"/>
+                <div className="img" />
               </div>
-              <div className="text">Привет! <br/>
-                Это чат для быстрой связи, чтобы
-                оперативно решить твой вопрос :)
+              <div className="text">
+                Привет! <br />
+                Это чат для быстрой связи, чтобы оперативно решить твой вопрос
+                :)
               </div>
             </div>
           </>
-        ) : this.renderMessages()}
+        ) : (
+          this.renderMessages()
+        )}
       </div>
-      <Compose/>
+      <Compose />
     </div>
   );
 
@@ -158,15 +165,12 @@ class MessageList extends Component {
   };
 
   render() {
+    // eslint-disable-next-line no-underscore-dangle
     window.__arsfShowGreetings = this.props.messages.messages.length === 0;
     if (this.props.loading) {
-      return <Loader/>;
+      return <Loader />;
     }
-    return (
-      <Div style={{height: '100%'}}>
-        {this.renderContent()}
-      </Div>
-    );
+    return <Div style={{height: '100%'}}>{this.renderContent()}</Div>;
   }
 }
 
