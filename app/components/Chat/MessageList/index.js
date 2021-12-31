@@ -2,6 +2,8 @@ import React, {Component, memo} from 'react';
 import {connect} from 'react-redux';
 import {compose} from 'redux';
 import moment from 'dayjs';
+import duration from 'dayjs/plugin/duration';
+
 import {createStructuredSelector} from 'reselect';
 import injectSaga from 'utils/injectSaga';
 import injectReducer from 'utils/injectReducer';
@@ -23,6 +25,7 @@ import Loader from '../Loader';
 import observe, {emitData} from '../../../utils/observers';
 
 const Div = styled('MessageList');
+moment.extend(duration);
 
 // eslint-disable-next-line no-underscore-dangle
 window.__arsfChatEmmitter = emitData;
