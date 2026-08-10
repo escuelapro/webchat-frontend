@@ -40,6 +40,8 @@
     "pretest": "npm run test:clean && npm run lint",
     "test:clean": "rimraf ./coverage",
     "test": "cross-env NODE_ENV=test jest --coverage",
+    "test:unit": "cross-env NODE_ENV=test jest",
+    "test:coverage": "cross-env NODE_ENV=test jest --coverage",
     "test:watch": "cross-env NODE_ENV=test jest --watchAll",
     "coveralls": "cat ./coverage/lcov.info | coveralls",
     "prettify": "prettier --write"
